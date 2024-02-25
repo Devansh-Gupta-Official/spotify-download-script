@@ -40,3 +40,6 @@ else:
 
 ## Save the access token to the environment variable for future use
 os.environ['ACCESS_TOKEN'] = access_token
+
+with open('.env', 'a') as f:
+            f.write(f'\nACCESS_TOKEN="{access_token}"')
