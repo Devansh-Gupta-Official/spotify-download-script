@@ -39,8 +39,10 @@ with open("track.csv", "r", newline='') as file:
         url_list.append(url)
 
     url_list[0] =f"URL"
-    
 
+    
+dataframe = pd.DataFrame(url_list)
+dataframe.to_csv('url.csv',index=False,header=False)
 
 
 
