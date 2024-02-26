@@ -23,7 +23,7 @@ def get_tracks(playlist_id,access_token):
 tracks,session = get_tracks(uri,ACCESS_TOKEN)
 
 #INITIALIZE A CSV FILE IN WHICH YOU COPY ALL INFO REGARDING A TRACK
-with open("track.csv", "w", encoding="utf-8") as file:
+with open("track.csv", "w", newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Name","Artist","Album Name","Album Release Date"])
 
