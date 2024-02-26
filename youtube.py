@@ -42,8 +42,6 @@ with open("track.csv", "r", newline='') as file:
     
 
 
-        
-
 
 
 
