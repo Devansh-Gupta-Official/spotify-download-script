@@ -10,7 +10,8 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 client_credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"    #f string
-encoded_client_creds = base64.b64encode(client_credentials.encode())    #encoded_client_creds: Holds the result of the Base64 encoding, which is a bytes object containing the Base64-encoded representation of client_credentials.
+encoded_client_creds = base64.b64encode(client_credentials.encode())
+#encoded_client_creds: Holds the result of the Base64 encoding, which is a bytes object containing the Base64-encoded representation of client_credentials.
 
 #GETTING THE ACCESS TOKEN
 auth_url = 'https://accounts.spotify.com/api/token'
