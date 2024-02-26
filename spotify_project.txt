@@ -12,7 +12,9 @@ workflow:
 
 4. upload to phone
 
-(scraping the list of songs on a playlist using BS4 and requests, searching them on YouTube using yt-api and downloading using pytube only the audio stream, then separating audio from the mp4 using moviepy and deleting the mp4)
+(scraping the list of songs on a playlist using BS4 and requests, searching them on YouTube using yt-api and downloading using pytube only the audio stream, then separating audio from the mp4 using moviepy)
+(we can save all mp3 downloads and mp4 downloads in 2 seperate zip files)
+(on the web app, the user can chhose mp3 or mp4, we provide the respective zip file)
 
 
 5. pipeline the process/ create streamlit app and run all scripts through it
