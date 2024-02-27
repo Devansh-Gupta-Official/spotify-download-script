@@ -29,7 +29,7 @@ def get_video_url(name):
 #extracting song name, artist name from csv
 with open("track.csv", "r", newline='') as file:
     reader = csv.reader(file)
-    # next(reader)   #skips the header file
+    # next(reader)   #skips the header row
 
     url_list=[]
     
