@@ -4,10 +4,10 @@ from pytube import YouTube
 
 #creating a folder where these videos should download
 script_directory = os.path.dirname(os.path.abspath(__file__))
-download_directory = os.path.join(script_directory,"downloads")
+download_directory = os.path.join(script_directory,"downloads_mp4")
 os.makedirs(download_directory, exist_ok=True)
 
-video_number = 0
+video_number = 1
 
 # opening track.csv
 with open('url.csv','r',newline='') as file:
