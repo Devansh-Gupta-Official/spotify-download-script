@@ -14,7 +14,7 @@ def run():
     load_dotenv()
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
-    playlist_link = link
+    playlist_link = 'https://open.spotify.com/playlist/00i82lDzMDdiHWNjrIGAyw?si=DzmeuZbeRheqRK2DH6R-OA'
     #Extracting playlist uri from link
     uri = playlist_link.split("/")[-1].split("?")[0]
 
