@@ -7,8 +7,10 @@ workflow:
   - write to cvs
  
 2. search data on youtube and get url
+  - use youtube api
 
 3. download data in mp3 using a library
+  - pytube
 
 4. upload to phone
 
