@@ -20,3 +20,14 @@ workflow:
 
 
 5. pipeline the process/ create streamlit app and run all scripts through it
+   - add animations
+   - progress bar
+   - database
+
+
+6. future scope
+   - implement same for albums
+   - resolve age restriction
+   - make the process faster
+   - make the webiste better/ beautiful
+   
