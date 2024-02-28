@@ -31,3 +31,6 @@ workflow:
    - make the process faster
    - make the webiste better/ beautiful
    
+7. documentation
+
+8. extension make
