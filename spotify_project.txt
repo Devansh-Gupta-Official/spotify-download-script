@@ -34,3 +34,5 @@ workflow:
 7. documentation
 
 8. extension make
+   - user goes to playlist and switches on extension
+   - extension reads playlist link and gives zip file
