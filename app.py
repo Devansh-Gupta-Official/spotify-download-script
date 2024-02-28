@@ -11,106 +11,112 @@ from googleapiclient.discovery import build
 import pandas as pd
 import re
 
-# load_dotenv()
+playlist_link = st.text_input("Enter playlist link")
 
-# CLIENT_ID = os.getenv("CLIENT_ID")
-# CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+submit = st.button('Submit')
 
-# client_credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"    
-# encoded_client_creds = base64.b64encode(client_credentials.encode())
-
-# auth_url = 'https://accounts.spotify.com/api/token'
+if submit:
 
 
-# headers={
-#     'Authorization':f"Basic {encoded_client_creds.decode()}"
-# }
+    load_dotenv()
 
-# form={
-#     'grant_type':'client_credentials'
-# }
+    CLIENT_ID = os.getenv("CLIENT_ID")
+    CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
-# response = requests.post(auth_url,data=form,headers=headers)
+    client_credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"    
+    encoded_client_creds = base64.b64encode(client_credentials.encode())
 
-
-# if response.status_code==200:
-#     access_token=response.json()['access_token']
-#     print("sucessful")
-# else:
-#     print("error")
-#     exit()
-
-# os.environ['ACCESS_TOKEN'] = access_token
-
-# with open('.env', 'r') as f:
-#     lines = f.readlines()
-
-# updated_lines = []
-# found_access_token = False
-# for line in lines:
-#     if line.startswith('ACCESS_TOKEN='):
-#         updated_lines.append(f'ACCESS_TOKEN="{access_token}"\n')
-#         found_access_token = True
-#     else:
-#         updated_lines.append(line)
-
-# if not found_access_token:
-#     updated_lines.append(f'ACCESS_TOKEN="{access_token}"\n')
-
-# with open('.env', 'w') as f:
-#     f.writelines(updated_lines)
+    auth_url = 'https://accounts.spotify.com/api/token'
 
 
-# ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+    headers={
+        'Authorization':f"Basic {encoded_client_creds.decode()}"
+    }
 
-# playlist_link = 'https://open.spotify.com/playlist/00i82lDzMDdiHWNjrIGAyw?si=DzmeuZbeRheqRK2DH6R-OA'
+    form={
+        'grant_type':'client_credentials'
+    }
 
-# uri = playlist_link.split("/")[-1].split("?")[0]
+    response = requests.post(auth_url,data=form,headers=headers)
 
 
-# API_KEY=os.getenv("YOUTUBE_API_KEY")
+    if response.status_code==200:
+        access_token=response.json()['access_token']
+        print("sucessful")
+    else:
+        print("error")
+        exit()
 
-# def get_tracks(playlist_id,access_token):
-       
-#     session = spotipy.Spotify(auth=access_token)
-#     track = session.playlist_tracks(playlist_id)['items']
-#     return track, session
+    os.environ['ACCESS_TOKEN'] = access_token
 
-# def get_video_url(name):
-#     youtube=build('youtube','v3',developerKey=API_KEY)
-#     request = youtube.search().list(part='snippet',type='video',q=name,maxResults=1)
-#     response=request.execute()
-#     id = response['items'][0]['id']['videoId']  
-#     videoURL=f"https://www.youtube.com/watch?v={id}"  
-#     return videoURL
+    with open('.env', 'r') as f:
+        lines = f.readlines()
 
-# tracks,session = get_tracks(uri,ACCESS_TOKEN)
+    updated_lines = []
+    found_access_token = False
+    for line in lines:
+        if line.startswith('ACCESS_TOKEN='):
+            updated_lines.append(f'ACCESS_TOKEN="{access_token}"\n')
+            found_access_token = True
+        else:
+            updated_lines.append(line)
 
-# script_directory = os.path.dirname(os.path.abspath(__file__))
-# mp3_directory = os.path.join(script_directory,"downloads_mp3")
-# os.makedirs(mp3_directory, exist_ok=True)
+    if not found_access_token:
+        updated_lines.append(f'ACCESS_TOKEN="{access_token}"\n')
 
-# for track in tracks:
-#         name = track['track']['name']     
-#         artists = ','.join(artist['name'] for artist in track['track']['artists'])  
-#         keyword=f"{name},{artists}"  
-#         url = get_video_url(keyword)
-#         video = YouTube(url)           
-#         try:
-#             stream = video.streams.filter(only_audio=True).first()
-#             title = re.sub(r'[^\w\-_\. ]', '_', video.title)
-#             stream.download(output_path=mp3_directory,filename=f"{title}.mp3")
-#             print(f"Download of Song {video.title} is completed successfully")
-#         except:
-#             print("An error has occurred")
-#             print(url)
+    with open('.env', 'w') as f:
+        f.writelines(updated_lines)
 
-import auth
-import spotify
-import youtube
-import downloading_mp3
 
-auth.run()
-spotify.run()
-youtube.run()
-downloading_mp3.run()
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+
+
+    uri = playlist_link.split("/")[-1].split("?")[0]
+
+
+    API_KEY=os.getenv("YOUTUBE_API_KEY")
+
+    def get_tracks(playlist_id,access_token):
+        
+        session = spotipy.Spotify(auth=access_token)
+        track = session.playlist_tracks(playlist_id)['items']
+        return track, session
+
+    def get_video_url(name):
+        youtube=build('youtube','v3',developerKey=API_KEY)
+        request = youtube.search().list(part='snippet',type='video',q=name,maxResults=1)
+        response=request.execute()
+        id = response['items'][0]['id']['videoId']  
+        videoURL=f"https://www.youtube.com/watch?v={id}"  
+        return videoURL
+
+    tracks,session = get_tracks(uri,ACCESS_TOKEN)
+
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    mp3_directory = os.path.join(script_directory,"downloads_mp3")
+    os.makedirs(mp3_directory, exist_ok=True)
+
+    for track in tracks:
+            name = track['track']['name']     
+            artists = ','.join(artist['name'] for artist in track['track']['artists'])  
+            keyword=f"{name},{artists}"  
+            url = get_video_url(keyword)
+            video = YouTube(url)           
+            try:
+                stream = video.streams.filter(only_audio=True).first()
+                title = re.sub(r'[^\w\-_\. ]', '_', video.title)
+                stream.download(output_path=mp3_directory,filename=f"{title}.mp3")
+                print(f"Download of Song {video.title} is completed successfully")
+            except:
+                print("An error has occurred")
+                print(url)
+
+# import auth
+# import spotify
+# import youtube
+# import downloading_mp3
+
+# auth.run()
+# spotify.run()
+# youtube.run()
+# downloading_mp3.run()
