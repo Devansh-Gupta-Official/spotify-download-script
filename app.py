@@ -11,6 +11,33 @@ from googleapiclient.discovery import build
 import pandas as pd
 import re
 import time
+import json
+from streamlit_lottie import st_lottie
+
+st.set_page_config(
+    page_title="Hello",
+    page_icon="🏠",
+)
+
+def load_animations(filepath:str):
+    with open(filepath,'r',encoding="utf8") as f:
+        return json.load(f)
+
+spotify = load_animations("spotify.json")
+
+with st.sidebar:
+    st_lottie(
+        spotify,
+        speed=1,
+        reverse=False,
+        loop=True,
+        quality='medium',
+        height=None,
+        width=None,
+        key="spotify"
+    )
+
+
 
 value = st.sidebar.selectbox(label="Select your Link Type",options=["Playlist","Album"],index=None,placeholder="Select an Option")
 
@@ -131,9 +158,20 @@ else:
                 time.sleep(0.5)
                 bar=bar.progress(p+1,text=progress_text)
                 p+=int(100/n)
-
         bar=bar.progress(100)
         st.success("Completed")
+        mp3 = load_animations("mp3.json")
+        with st.sidebar:
+                st_lottie(
+                        mp3,
+                        speed=1,
+                        reverse=False,
+                        loop=True,
+                        quality='medium',
+                        height=None,
+                        width=None,
+                        key="mp3"
+                    )
 
 
 
