@@ -15,9 +15,10 @@ import json
 from streamlit_lottie import st_lottie
 
 st.set_page_config(
-    page_title="Hello",
-    page_icon="🏠",
+    page_title="Home",
+    page_icon="🎵",
 )
+
 
 def load_animations(filepath:str):
     with open(filepath,'r',encoding="utf8") as f:
