@@ -15,14 +15,11 @@ import json
 from streamlit_lottie import st_lottie
 from zipfile import ZipFile 
 import shutil
-import pickle
-import uuid
 
 st.set_page_config(
     page_title="Home",
     page_icon="🎵",
 )
-
 
 def load_animations(filepath:str):
     with open(filepath,'r',encoding="utf8") as f:
@@ -42,8 +39,6 @@ with st.sidebar:
         key="spotify"
     )
 
-
-
 value = st.sidebar.selectbox(label="Select your Link Type",options=["Playlist","Album"],index=None,placeholder="Select an Option")
 
 st.title(":musical_note: SPOTIFY")
@@ -56,7 +51,7 @@ st.write("")
 if value=='Album':
     st.write("Album")
 
-else:
+elif value=='Playlist':
     form = st.form(key='form_playlist')
     playlist_link = form.text_input(label="Enter Spotify Playlist Link",placeholder='Eg: https://open.spotify.com/playlist/00i82lDzMDdiHWNjrIGAyw?si=DzmeuZbeRheqRK2DH6R-OA')
     submit = form.form_submit_button(label='Submit')
@@ -118,7 +113,7 @@ else:
         uri = playlist_link.split("/")[-1].split("?")[0]
 
 
-        # API_KEY=os.getenv("YOUTUBE_API_KEY")
+        API_KEY=os.getenv("YOUTUBE_API_KEY")
 
         def get_tracks(playlist_id,access_token):
             
@@ -156,7 +151,7 @@ else:
                 #     stream = video.streams.filter(only_audio=True).first()
                 #     title = re.sub(r'[^\w\-_\. ]', '_', video.title)
                 #     stream.download(output_path=mp3_directory,filename=f"{title}.mp3")
-                #     print(f"Download of Song {video.title} is completed successfully")
+                #     print(f"Download of {video.title} is completed successfully")
                 # except:
                 #     print("An error has occurred")
                 #     print(url)
@@ -189,21 +184,10 @@ else:
         flag = st.download_button(label='Download Zip', data=zip_file, file_name='songs.zip',type="primary")  # Defaults to 'application/octet-stream'
         if flag:
             st.write('Thanks for downloading!')
+
+else:
+    st.header(':arrow_left: Please Select the type of Link')
             
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
 
 # import auth
 # import spotify
