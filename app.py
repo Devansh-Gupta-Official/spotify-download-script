@@ -13,6 +13,8 @@ import re
 import time
 import json
 from streamlit_lottie import st_lottie
+from zipfile import ZipFile 
+import shutil
 
 st.set_page_config(
     page_title="Home",
@@ -114,7 +116,7 @@ else:
         uri = playlist_link.split("/")[-1].split("?")[0]
 
 
-        # API_KEY=os.getenv("YOUTUBE_API_KEY")
+        API_KEY=os.getenv("YOUTUBE_API_KEY")
 
         def get_tracks(playlist_id,access_token):
             
@@ -122,19 +124,19 @@ else:
             track = session.playlist_tracks(playlist_id)['items']
             return track, session
 
-        # def get_video_url(name):
-        #     youtube=build('youtube','v3',developerKey=API_KEY)
-        #     request = youtube.search().list(part='snippet',type='video',q=name,maxResults=1)
-        #     response=request.execute()
-        #     id = response['items'][0]['id']['videoId']  
-        #     videoURL=f"https://www.youtube.com/watch?v={id}"  
-        #     return videoURL
+        def get_video_url(name):
+            youtube=build('youtube','v3',developerKey=API_KEY)
+            request = youtube.search().list(part='snippet',type='video',q=name,maxResults=1)
+            response=request.execute()
+            id = response['items'][0]['id']['videoId']  
+            videoURL=f"https://www.youtube.com/watch?v={id}"  
+            return videoURL
 
         tracks,session = get_tracks(uri,ACCESS_TOKEN)
 
-        # script_directory = os.path.dirname(os.path.abspath(__file__))
-        # mp3_directory = os.path.join(script_directory,"downloads_mp3")
-        # os.makedirs(mp3_directory, exist_ok=True)
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        mp3_directory = os.path.join(script_directory,"downloads_mp3")
+        os.makedirs(mp3_directory, exist_ok=True)
 
         progress_text = "Operation in progress. Please wait."
         p=0
@@ -143,19 +145,19 @@ else:
         n = len(tracks)
 
         for track in tracks:
-                # name = track['track']['name']     
-                # artists = ','.join(artist['name'] for artist in track['track']['artists'])  
-                # keyword=f"{name},{artists}"  
-                # url = get_video_url(keyword)
-                # video = YouTube(url)           
-                # try:
-                #     stream = video.streams.filter(only_audio=True).first()
-                #     title = re.sub(r'[^\w\-_\. ]', '_', video.title)
-                #     stream.download(output_path=mp3_directory,filename=f"{title}.mp3")
-                #     print(f"Download of Song {video.title} is completed successfully")
-                # except:
-                #     print("An error has occurred")
-                #     print(url)
+                name = track['track']['name']     
+                artists = ','.join(artist['name'] for artist in track['track']['artists'])  
+                keyword=f"{name},{artists}"  
+                url = get_video_url(keyword)
+                video = YouTube(url)           
+                try:
+                    stream = video.streams.filter(only_audio=True).first()
+                    title = re.sub(r'[^\w\-_\. ]', '_', video.title)
+                    stream.download(output_path=mp3_directory,filename=f"{title}.mp3")
+                    print(f"Download of Song {video.title} is completed successfully")
+                except:
+                    print("An error has occurred")
+                    print(url)
                 time.sleep(0.5)
                 bar=bar.progress(p+1,text=progress_text)
                 p+=int(100/n)
@@ -173,7 +175,14 @@ else:
                         width=None,
                         key="mp3"
                     )
+                
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        zip_directory = os.path.join(script_directory,"mp3")
 
+        shutil.make_archive(zip_directory,'zip',mp3_directory)
+
+        st.write("Completed")
+        
 
 
 
