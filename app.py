@@ -21,6 +21,7 @@ st.set_page_config(
     page_icon="🎵",
 )
 
+#LOADING SPOTIFY ANIMATION
 def load_animations(filepath:str):
     with open(filepath,'r',encoding="utf8") as f:
         return json.load(f)
@@ -39,6 +40,7 @@ with st.sidebar:
         key="spotify"
     )
 
+#SIDEBAR IMPLEMENTATION
 value = st.sidebar.selectbox(label="Select your Link Type",options=["Playlist","Album"],index=None,placeholder="Select an Option")
 
 st.title(":musical_note: SPOTIFY")
@@ -48,10 +50,12 @@ st.write("")
 st.write("")
 st.write("")
 
+#GETTING .ENV VARIABLES
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 API_KEY=os.getenv("YOUTUBE_API_KEY")
 
+#GETTING ACCESS TOKEN
 load_dotenv()
 client_credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"    
 encoded_client_creds = base64.b64encode(client_credentials.encode())
@@ -92,6 +96,7 @@ with open('.env', 'r') as f:
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
 
+#GET URL OF A SONG FROM YOUTUBE
 def get_video_url(name):
             youtube=build('youtube','v3',developerKey=API_KEY)
             request = youtube.search().list(part='snippet',type='video',q=name,maxResults=1)
@@ -101,38 +106,45 @@ def get_video_url(name):
             return videoURL
 
 
+#IF USER SELECTS ALBUM TYPE LINK
 if value=='Album':
+    #INPUT ALBUM LINK
     formAlbum = st.form(key='form_album')
     album_link = formAlbum.text_input(label="Enter Spotify Album Link",placeholder='Eg: https://open.spotify.com/album/78bpIziExqiI9qztvNFlQu?si=KD20tppwS-udpQqtY38-hA')
     submitAlbum = formAlbum.form_submit_button(label='Submit')
 
+    #GET ALL ALBUM SONGS NAME FROM URI OF LINK
     def get_album_tracks(album_id,access_token):
             session = spotipy.Spotify(auth=access_token)
             track = session.album_tracks(album_id)['items']
             return track, session
 
+    #IF USER SUBMIT LINKS
     if submitAlbum:
         uriAlbum = album_link.split("/")[-1].split("?")[0]
+        #RUN AND GET NAMES OF SONGS
         tracksAlbum,session = get_album_tracks(uriAlbum,ACCESS_TOKEN)
 
+        #INITIALIZE DOWNLOADS FOLDER
         script_directory = os.path.dirname(os.path.abspath(__file__))
         mp3album_directory = os.path.join(script_directory,"downloads_mp3_albums")
         os.makedirs(mp3album_directory, exist_ok=True)
 
+        #PROGRESS BAR
         progress_text = "Operation in progress. Please wait."
         p=0
         bar = st.progress(p,text=progress_text)
         n = len(tracksAlbum)
         for track in tracksAlbum:
-                album_name = track['name']    
-                album_artists = track['artists'][0]['name']
+                album_name = track['name']    #GET SONG NAME
+                album_artists = track['artists'][0]['name']   #GET ARTIST NAME
                 keyword=f"{album_name},{album_artists}"  
-                url = get_video_url(keyword)
+                url = get_video_url(keyword)   #GET YOUTUBE VIDEO LINK
                 video = YouTube(url)           
                 try:
-                    stream = video.streams.filter(only_audio=True).first()
-                    title = re.sub(r'[^\w\-_\. ]', '_', video.title)
-                    stream.download(output_path=mp3album_directory,filename=f"{title}.mp3")
+                    stream = video.streams.filter(only_audio=True).first()   
+                    title = re.sub(r'[^\w\-_\. ]', '_', video.title)    #REMOVE SPECIAL CHARACTERS FROM NAME OF SONG
+                    stream.download(output_path=mp3album_directory,filename=f"{title}.mp3")  #DOWNLOAD MP3 FROM LINK
                     print(f"Download of {video.title} is completed successfully")
                 except:
                     print("An error has occurred")
@@ -142,37 +154,40 @@ if value=='Album':
                 p+=int(100/n)
         bar=bar.progress(100)
         st.success("Completed")     
+
+        #MAKE ZIP FILE
         script_directory = os.path.dirname(os.path.abspath(__file__))
         zip_directory = os.path.join(script_directory,"mp3_album")
-
         shutil.make_archive(zip_directory,'zip',mp3album_directory)
-
+        #ADD DOWNLOADS FOLDER CONTENTS TO ZIP FILE
         with open('mp3_album.zip', 'rb') as f:
             zip_album_file=f.read()
 
-
+        #PROVIDE DOWNLOAD BUTTON TO DOWNLOAD ZIP FILE FROM WEB
         flag = st.download_button(label='Download Zip', data=zip_album_file, file_name='AlbumSongs.zip',type="primary")  # Defaults to 'application/octet-stream'
         if flag:
             st.write('Thanks for downloading!')
 
-
+#IF USER SELECTS PLAYLIST TYPE LINK
 elif value=='Playlist':
     form = st.form(key='form_playlist')
     playlist_link = form.text_input(label="Enter Spotify Playlist Link",placeholder='Eg: https://open.spotify.com/playlist/00i82lDzMDdiHWNjrIGAyw?si=DzmeuZbeRheqRK2DH6R-OA')
     submitPlaylist = form.form_submit_button(label='Submit')
 
+    #GET ALL PLAYLIST SONGS NAME FROM URI OF LINK
     def get_tracks(playlist_id,access_token):
             session = spotipy.Spotify(auth=access_token)
             track = session.playlist_tracks(playlist_id)['items']
             return track, session
 
+    #IF USER SUBMITS LINK
     if submitPlaylist:
         uri = playlist_link.split("/")[-1].split("?")[0]
         tracks,session = get_tracks(uri,ACCESS_TOKEN)
 
         script_directory = os.path.dirname(os.path.abspath(__file__))
-        mp3_directory = os.path.join(script_directory,"downloads_mp3")
-        os.makedirs(mp3_directory, exist_ok=True)
+        mp3playlist_directory = os.path.join(script_directory,"downloads_mp3_playlist")
+        os.makedirs(mp3playlist_directory, exist_ok=True)
 
         progress_text = "Operation in progress. Please wait."
         p=0
@@ -187,7 +202,7 @@ elif value=='Playlist':
                 try:
                     stream = video.streams.filter(only_audio=True).first()
                     title = re.sub(r'[^\w\-_\. ]', '_', video.title)
-                    stream.download(output_path=mp3_directory,filename=f"{title}.mp3")
+                    stream.download(output_path=mp3playlist_directory,filename=f"{title}.mp3")
                     print(f"Download of {video.title} is completed successfully")
                 except:
                     print("An error has occurred")
@@ -198,9 +213,9 @@ elif value=='Playlist':
         bar=bar.progress(100)
         st.success("Completed")
         script_directory = os.path.dirname(os.path.abspath(__file__))
-        zip_directory = os.path.join(script_directory,"mp3")
+        zip_directory = os.path.join(script_directory,"mp3_playlist")
 
-        shutil.make_archive(zip_directory,'zip',mp3_directory)
+        shutil.make_archive(zip_directory,'zip',mp3playlist_directory)
 
         with open('mp3.zip', 'rb') as f:
             zip_file=f.read()
