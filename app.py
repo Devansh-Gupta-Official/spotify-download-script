@@ -73,8 +73,9 @@ if response.status_code==200:
     print("sucessful")
 else:
     print("error")
-
+    
 os.environ['ACCESS_TOKEN'] = access_token
+
 with open('.env', 'r') as f:
     lines = f.readlines()
 
