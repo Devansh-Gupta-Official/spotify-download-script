@@ -26,10 +26,12 @@ workflow:
 
 
 6. future scope
-   - implement same for albums
    - resolve age restriction
    - make the process faster
    - make the webiste better/ beautiful
+   - give option to listen to individual songs before downloading
+   - make it for other apps like apple music,etc
+   - auto detect from link whether it is apple music, spotify and if it is an album or playlist and change animation accordingly
    
 7. documentation
 
