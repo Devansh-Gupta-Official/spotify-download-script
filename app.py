@@ -21,6 +21,8 @@ st.set_page_config(
     page_icon="🎵",
 )
 
+
+
 #LOADING SPOTIFY ANIMATION
 def load_animations(filepath:str):
     with open(filepath,'r',encoding="utf8") as f:
@@ -73,7 +75,7 @@ if response.status_code==200:
     print("sucessful")
 else:
     print("error")
-    
+
 os.environ['ACCESS_TOKEN'] = access_token
 
 with open('.env', 'r') as f:
@@ -165,9 +167,12 @@ if value=='Album':
             zip_album_file=f.read()
 
         #PROVIDE DOWNLOAD BUTTON TO DOWNLOAD ZIP FILE FROM WEB
-        flag = st.download_button(label='Download Zip', data=zip_album_file, file_name='AlbumSongs.zip',type="primary")  # Defaults to 'application/octet-stream'
-        if flag:
-            st.write('Thanks for downloading!')
+            
+        col1, col2, col3 = st.columns(3)
+        with col2:
+            flag = st.download_button(label='Download Zip', data=zip_album_file, file_name='AlbumSongs.zip',type="secondary")  # Defaults to 'application/octet-stream'
+            if flag:
+                st.write('Thanks for downloading!')
 
 #IF USER SELECTS PLAYLIST TYPE LINK
 elif value=='Playlist':
@@ -218,12 +223,15 @@ elif value=='Playlist':
 
         shutil.make_archive(zip_directory,'zip',mp3playlist_directory)
 
-        with open('mp3.zip', 'rb') as f:
+        with open('mp3_playlist.zip', 'rb') as f:
             zip_file=f.read()
 
-        flag = st.download_button(label='Download Zip', data=zip_file, file_name='PlaylistSongs.zip',type="primary")  # Defaults to 'application/octet-stream'
-        if flag:
-            st.write('Thanks for downloading!')
+        
+        col1, col2, col3 = st.columns(3)
+        with col2:
+            flag = st.download_button(label='Download Zip', data=zip_file, file_name='PlaylistSongs.zip',type="secondary")  # Defaults to 'application/octet-stream'
+            if flag:
+                st.write('Thanks for downloading!')
 
 else:
     st.header(':arrow_left: Please Select the type of Link')
