@@ -51,23 +51,23 @@ st.write("")
 st.write("")
 
 # ABOUT SECTION
-st.sidebar.title("About :eyeglasses:")
+st.sidebar.title("About")
 st.sidebar.info(
-    "This app allows you to convert your Spotify Playlist or Album to MP3 files. "
-    "You can download the converted songs as a ZIP file. Enjoy your music on the go!"
+    "Welcome to the Spotify to MP3 Converter App! This app allows you to convert your Spotify playlists or albums into MP3 files. Simply provide the Spotify playlist or album link, and the app will download the corresponding songs in MP3 format."
 )
 
 # HOW TO USE SECTION
-st.sidebar.title("How to Use :open_book: ")
-st.sidebar.markdown(
-    """
-    1. **Select Link Type:** Choose whether you want to convert a Spotify Playlist or Album.
-    2. **Enter Spotify Link:** Provide the link of the Spotify Playlist or Album in the input box.
-    3. **Submit:** Click the 'Submit' button to start the conversion process.
-    4. **Download:** After the conversion is complete, use the 'Download Zip' button to get your MP3 files.
-
-    """
+st.sidebar.title("How to Use :open_book:")
+st.sidebar.markdown("1. Choose the type of link you want to convert: Playlist or Album.\n 2. Enter the Spotify link in the respective input field.\n 3. Click the 'Submit' button to start the conversion process.\n 4. Once the conversion is complete, you can listen to a sample of each song before downloading.\n 5. If you're satisfied with the sample, proceed to download the MP3 files in a zip archive.\n"
 )
+
+# ADDITIONAL TIPS SECTION (Optional)
+st.sidebar.title("Tips💡")
+st.sidebar.write(
+    "- Make sure to have a Spotify account and provide valid Spotify links for accurate conversion."
+)
+st.sidebar.write("- Ensure you have a good internet connection for smooth processing.")
+st.sidebar.write("- For any issues or feedback, contact the developer.")
 
 #GETTING .ENV VARIABLES
 CLIENT_ID = os.getenv("CLIENT_ID")
