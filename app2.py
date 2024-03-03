@@ -291,6 +291,12 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                 width=None,
                 key="apple"
             )
+        
+        if identify_link(playlist_link)=="apple_playlist":
+            
+
+
+
 
     else:
         st.write("This is not a valid link")
