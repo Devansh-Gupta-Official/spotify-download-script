@@ -32,6 +32,7 @@ workflow:
    - make it for other apps like apple music,etc
    - auto detect from link whether it is apple music, spotify and if it is an album or playlist and change animation accordingly
    - add st.caches
+   - add about, how to use, and when auto detected then what app the link is from in sidebar
    
 7. documentation
 

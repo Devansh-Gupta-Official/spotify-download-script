@@ -43,12 +43,31 @@ with st.sidebar:
 #SIDEBAR IMPLEMENTATION
 value = st.sidebar.selectbox(label="Select your Link Type",options=["Playlist","Album"],index=None,placeholder="Select an Option")
 
-st.title(":musical_note: SPOTIFY")
+st.title(":musical_note: SPOTIFY :tm:")
 st.header("Convert your Spotify Playlist to MP3 Files")
 
 st.write("")
 st.write("")
 st.write("")
+
+# ABOUT SECTION
+st.sidebar.title("About :eyeglasses:")
+st.sidebar.info(
+    "This app allows you to convert your Spotify Playlist or Album to MP3 files. "
+    "You can download the converted songs as a ZIP file. Enjoy your music on the go!"
+)
+
+# HOW TO USE SECTION
+st.sidebar.title("How to Use :open_book: ")
+st.sidebar.markdown(
+    """
+    1. **Select Link Type:** Choose whether you want to convert a Spotify Playlist or Album.
+    2. **Enter Spotify Link:** Provide the link of the Spotify Playlist or Album in the input box.
+    3. **Submit:** Click the 'Submit' button to start the conversion process.
+    4. **Download:** After the conversion is complete, use the 'Download Zip' button to get your MP3 files.
+
+    """
+)
 
 #GETTING .ENV VARIABLES
 CLIENT_ID = os.getenv("CLIENT_ID")
