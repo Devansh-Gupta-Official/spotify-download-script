@@ -72,6 +72,7 @@ if response.status_code==200:
     access_token=response.json()['access_token']
     print("sucessful")
 else:
+    access_token=''
     print("error")
 
 os.environ['ACCESS_TOKEN'] = access_token
@@ -105,6 +106,19 @@ def get_video_url(name):
         id = response['items'][0]['id']['videoId']  
         videoURL=f"https://www.youtube.com/watch?v={id}"  
         return videoURL
+
+#DELETING ZIP FILES CONTENT AFTE RUSAGE
+def delete_files_in_directory(directory_path):
+   try:
+     files = os.listdir(directory_path)
+     for file in files:
+       file_path = os.path.join(directory_path, file)
+       if os.path.isfile(file_path):
+         os.remove(file_path)
+     print("All files deleted successfully.")
+   except OSError:
+     print("Error occurred while deleting files.")
+
 
 
 #IF USER SELECTS ALBUM TYPE LINK
@@ -146,7 +160,7 @@ if value=='Album':
                     stream = video.streams.filter(only_audio=True).first()   
                     title = re.sub(r'[^\w\-_\. ]', '_', video.title)    #REMOVE SPECIAL CHARACTERS FROM NAME OF SONG
                     stream.download(output_path=mp3album_directory,filename=f"{title}.mp3")  #DOWNLOAD MP3 FROM LINK
-                    file_path = f"{mp3album_directory}\{title}.mp3"
+                    file_path = rf"{mp3album_directory}\{title}.mp3"
 
                     #READING AUDIO FILES TO DISPLAY IN APP
                     audio_file = open(file_path,'rb')
@@ -216,7 +230,7 @@ elif value=='Playlist':
                     stream = video.streams.filter(only_audio=True).first()
                     title = re.sub(r'[^\w\-_\. ]', '_', video.title)
                     stream.download(output_path=mp3playlist_directory,filename=f"{title}.mp3")
-                    file_path_playlist = f"{mp3playlist_directory}\{title}.mp3"
+                    file_path_playlist = rf"{mp3playlist_directory}\{title}.mp3"
                     #READING AUDIO FILES TO DISPLAY IN APP
                     audio_file = open(file_path_playlist,'rb')
                     audio_read = audio_file.read()
@@ -247,6 +261,8 @@ elif value=='Playlist':
             flag = st.download_button(label='Download Zip', data=zip_file, file_name='PlaylistSongs.zip',type="secondary")  # Defaults to 'application/octet-stream'
             if flag:
                 st.write('Thanks for downloading!')
+        
+        
 
 else:
     st.header(':arrow_left: Please Select the type of Link')
