@@ -209,7 +209,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                     st.write('Thanks for downloading!')
 
     #IF USER SELECTS PLAYLIST TYPE LINK
-    elif identify_link(playlist_link)=='spotify_playlist':
+    if identify_link(playlist_link)=='spotify_playlist':
         #GET ALL PLAYLIST SONGS NAME FROM URI OF LINK
         def get_tracks(playlist_id,access_token):
                 session = spotipy.Spotify(auth=access_token)
@@ -272,34 +272,32 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                     st.write('Thanks for downloading!')
             
 
-    elif identify_link(playlist_link)=="apple_playlist" or identify_link(playlist_link)=="apple_album":
-        #LOADING SPOTIFY ANIMATION
-        def load_animations(filepath:str):
-            with open(filepath,'r',encoding="utf8") as f:
-                return json.load(f)
+elif identify_link(playlist_link)=="apple_playlist" or identify_link(playlist_link)=="apple_album":
+    #LOADING SPOTIFY ANIMATION
+    def load_animations(filepath:str):
+        with open(filepath,'r',encoding="utf8") as f:
+            return json.load(f)
 
-        spotify = load_animations("apple_music.json")
+    apple = load_animations("apple_music.json")
 
-        with st.sidebar:
-            st_lottie(
-                spotify,
-                speed=1,
-                reverse=False,
-                loop=True,
-                quality='medium',
-                height=None,
-                width=None,
-                key="apple"
-            )
+    with st.sidebar:
+        st_lottie(
+            apple,
+            speed=1,
+            reverse=False,
+            loop=True,
+            quality='medium',
+            height=None,
+            width=None,
+            key="apple"
+        )
+    st.write("apple")
         
-        # if identify_link(playlist_link)=="apple_playlist":
+    # if identify_link(playlist_link)=="apple_playlist":
             
 
-
-
-
-    else:
-        st.write("This is not a valid link")
+else:
+    st.write("Enter a Valid Link")
 
 
 
