@@ -142,7 +142,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
 
         #CLEARING DOWNLOADS FOLDER AND ZIP FILE
         script_directory = os.path.dirname(os.path.abspath(__file__))
-        zip_to_delete =  os.path.join(script_directory,"mp3_playlist.zip")
+        zip_to_delete =  os.path.join(script_directory,"mp3.zip")
         directory_to_delete =  os.path.join(script_directory,"downloads")
 
         try:
@@ -226,7 +226,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
     if identify_link(playlist_link)=='spotify_playlist':
         #CLEARING DOWNLOADS FOLDER AND ZIP FILE
         script_directory = os.path.dirname(os.path.abspath(__file__))
-        zip_to_delete =  os.path.join(script_directory,"mp3_playlist.zip")
+        zip_to_delete =  os.path.join(script_directory,"mp3.zip")
         directory_to_delete =  os.path.join(script_directory,"downloads")
 
         try:
@@ -290,7 +290,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
 
             shutil.make_archive(zip_directory,'zip',mp3_directory)
 
-            with open('mp3_playlist.zip', 'rb') as f:
+            with open('mp3.zip', 'rb') as f:
                 zip_file=f.read()
 
             
