@@ -150,8 +150,10 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
         except:
             print(f"The specified file does not exist.")
 
-        shutil.rmtree(directory_to_delete)
-
+        try:
+            shutil.rmtree(directory_to_delete)
+        except:
+            print(f"The specified file does not exist.")
         
         #GET ALL ALBUM SONGS NAME FROM URI OF LINK
         def get_album_tracks(album_id,access_token):
@@ -229,6 +231,11 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
 
         try:
             os.remove(zip_to_delete)
+        except:
+            print(f"The specified file does not exist.")
+
+        try:
+            shutil.rmtree(directory_to_delete)
         except:
             print(f"The specified file does not exist.")
 
