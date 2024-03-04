@@ -20,7 +20,10 @@ st.set_page_config(
     page_title="Home",
     page_icon="🎵",
 )
-
+# st.markdown(""" <style> .font {
+# font-size:50px ; font-family: 'Sans-serif'; color: #F2F2F2;} 
+# </style> """, unsafe_allow_html=True)
+# st.markdown('<h1 class="font">🎵 SPOTIFY ™️</h1>',unsafe_allow_html=True)
 st.title(":musical_note: SPOTIFY :tm:")
 st.header("Convert your Spotify Playlist to MP3 Files")
 
@@ -39,10 +42,6 @@ def identify_link(link):
         return "spotify_playlist"
     elif "spotify" in link and "album" in link:
         return "spotify_album"
-    elif "apple" in link and "playlist" in link:
-        return "apple_playlist"
-    elif "apple" in link and "album" in link:
-        return "apple_album"
     else:
         return "This is not a valid link"
     
@@ -140,6 +139,19 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
 
     #IF USER SELECTS ALBUM TYPE LINK
     if identify_link(playlist_link)=='spotify_album':
+
+        #CLEARING DOWNLOADS FOLDER AND ZIP FILE
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        zip_to_delete =  os.path.join(script_directory,"mp3_playlist.zip")
+        directory_to_delete =  os.path.join(script_directory,"downloads")
+
+        try:
+            os.remove(zip_to_delete)
+        except:
+            print(f"The specified file does not exist.")
+
+        shutil.rmtree(directory_to_delete)
+
         
         #GET ALL ALBUM SONGS NAME FROM URI OF LINK
         def get_album_tracks(album_id,access_token):
@@ -155,8 +167,8 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
 
             #INITIALIZE DOWNLOADS FOLDER
             script_directory = os.path.dirname(os.path.abspath(__file__))
-            mp3album_directory = os.path.join(script_directory,"downloads_mp3_albums")
-            os.makedirs(mp3album_directory, exist_ok=True)
+            mp3_directory = os.path.join(script_directory,"downloads")
+            os.makedirs(mp3_directory, exist_ok=True)
 
             #PROGRESS BAR
             progress_text = "Operation in progress. Please wait."
@@ -172,8 +184,8 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                     try:
                         stream = video.streams.filter(only_audio=True).first()   
                         title = re.sub(r'[^\w\-_\. ]', '_', video.title)    #REMOVE SPECIAL CHARACTERS FROM NAME OF SONG
-                        stream.download(output_path=mp3album_directory,filename=f"{title}.mp3")  #DOWNLOAD MP3 FROM LINK
-                        file_path = rf"{mp3album_directory}\{title}.mp3"
+                        stream.download(output_path=mp3_directory,filename=f"{title}.mp3")  #DOWNLOAD MP3 FROM LINK
+                        file_path = rf"{mp3_directory}\{title}.mp3"
 
                         #READING AUDIO FILES TO DISPLAY IN APP
                         audio_file = open(file_path,'rb')
@@ -194,22 +206,32 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
 
             #MAKE ZIP FILE
             script_directory = os.path.dirname(os.path.abspath(__file__))
-            zip_directory = os.path.join(script_directory,"mp3_album")
-            shutil.make_archive(zip_directory,'zip',mp3album_directory)
+            zip_directory = os.path.join(script_directory,"mp3")
+            shutil.make_archive(zip_directory,'zip',mp3_directory)
             #ADD DOWNLOADS FOLDER CONTENTS TO ZIP FILE
-            with open('mp3_album.zip', 'rb') as f:
+            with open('mp3.zip', 'rb') as f:
                 zip_album_file=f.read()
 
             #PROVIDE DOWNLOAD BUTTON TO DOWNLOAD ZIP FILE FROM WEB
                 
             col1, col2, col3 = st.columns(3)
             with col2:
-                flag = st.download_button(label='Download Zip', data=zip_album_file, file_name='AlbumSongs.zip',type="secondary")  # Defaults to 'application/octet-stream'
+                flag = st.download_button(label='Download Zip', data=zip_album_file, file_name='songs.zip',type="secondary")  # Defaults to 'application/octet-stream'
                 if flag:
                     st.write('Thanks for downloading!')
 
     #IF USER SELECTS PLAYLIST TYPE LINK
     if identify_link(playlist_link)=='spotify_playlist':
+        #CLEARING DOWNLOADS FOLDER AND ZIP FILE
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        zip_to_delete =  os.path.join(script_directory,"mp3_playlist.zip")
+        directory_to_delete =  os.path.join(script_directory,"downloads")
+
+        try:
+            os.remove(zip_to_delete)
+        except:
+            print(f"The specified file does not exist.")
+
         #GET ALL PLAYLIST SONGS NAME FROM URI OF LINK
         def get_tracks(playlist_id,access_token):
                 session = spotipy.Spotify(auth=access_token)
@@ -222,8 +244,8 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
             tracks,session = get_tracks(uri,ACCESS_TOKEN)
 
             script_directory = os.path.dirname(os.path.abspath(__file__))
-            mp3playlist_directory = os.path.join(script_directory,"downloads_mp3_playlist")
-            os.makedirs(mp3playlist_directory, exist_ok=True)
+            mp3_directory = os.path.join(script_directory,"downloads")
+            os.makedirs(mp3_directory, exist_ok=True)
 
             progress_text = "Operation in progress. Please wait."
             p=0
@@ -238,8 +260,8 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                     try:
                         stream = video.streams.filter(only_audio=True).first()
                         title = re.sub(r'[^\w\-_\. ]', '_', video.title)
-                        stream.download(output_path=mp3playlist_directory,filename=f"{title}.mp3")
-                        file_path_playlist = rf"{mp3playlist_directory}\{title}.mp3"
+                        stream.download(output_path=mp3_directory,filename=f"{title}.mp3")
+                        file_path_playlist = rf"{mp3_directory}\{title}.mp3"
                         #READING AUDIO FILES TO DISPLAY IN APP
                         audio_file = open(file_path_playlist,'rb')
                         audio_read = audio_file.read()
@@ -257,9 +279,9 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
             st.write("")
             # st.success("Completed")
             script_directory = os.path.dirname(os.path.abspath(__file__))
-            zip_directory = os.path.join(script_directory,"mp3_playlist")
+            zip_directory = os.path.join(script_directory,"mp3")
 
-            shutil.make_archive(zip_directory,'zip',mp3playlist_directory)
+            shutil.make_archive(zip_directory,'zip',mp3_directory)
 
             with open('mp3_playlist.zip', 'rb') as f:
                 zip_file=f.read()
@@ -267,37 +289,12 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
             
             col1, col2, col3 = st.columns([2.5,2,1.5])
             with col2:
-                flag = st.download_button(label='Download Zip', data=zip_file, file_name='PlaylistSongs.zip',type="secondary")  # Defaults to 'application/octet-stream'
+                flag = st.download_button(label='Download Zip', data=zip_file, file_name='songs.zip',type="secondary")  # Defaults to 'application/octet-stream'
                 if flag:
                     st.write('Thanks for downloading!')
-            
-
-elif identify_link(playlist_link)=="apple_playlist" or identify_link(playlist_link)=="apple_album":
-    #LOADING SPOTIFY ANIMATION
-    def load_animations(filepath:str):
-        with open(filepath,'r',encoding="utf8") as f:
-            return json.load(f)
-
-    apple = load_animations("apple_music.json")
-
-    with st.sidebar:
-        st_lottie(
-            apple,
-            speed=1,
-            reverse=False,
-            loop=True,
-            quality='medium',
-            height=None,
-            width=None,
-            key="apple"
-        )
-    st.write("apple")
-        
-    # if identify_link(playlist_link)=="apple_playlist":
-            
 
 else:
-    st.write("Enter a Valid Link")
+    st.warning("Enter a Valid Link")
 
 
 
