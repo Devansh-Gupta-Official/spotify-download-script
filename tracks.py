@@ -19,5 +19,3 @@ def get_tracks(playlist_id,access_token):
     return track, session
 
 
-tracks,session = get_tracks(uri,ACCESS_TOKEN)
-

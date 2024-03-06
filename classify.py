@@ -4,12 +4,8 @@ playlist_link = 'https://open.spotify.com/album/78bpIziExqiI9qztvNFlQu?si=KD20tp
 
 def identify_link(link):
     if "spotify" in link and "playlist" in link:
-        return "This is a Spotify playlist link."
+        return "spotify_playlist"
     elif "spotify" in link and "album" in link:
-        return "This is a Spotify album link."
+        return "spotify_album"
     else:
         return "This is not a valid link"
-
-
-result = identify_link(playlist_link)
-print(result)
