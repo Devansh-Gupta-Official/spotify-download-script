@@ -7,10 +7,6 @@ def identify_link(link):
         return "This is a Spotify playlist link."
     elif "spotify" in link and "album" in link:
         return "This is a Spotify album link."
-    elif "apple" in link and "playlist" in link:
-        return "This is a Apple Music playlist link."
-    elif "apple" in link and "album" in link:
-        return "This is a Apple Music album link."
     else:
         return "This is not a valid link"
 

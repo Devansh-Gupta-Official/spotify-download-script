@@ -24,7 +24,6 @@ st.set_page_config(
 # font-size:50px ; font-family: 'Sans-serif'; color: #F2F2F2;} 
 # </style> """, unsafe_allow_html=True)
 # st.markdown('<h1 class="font">🎵 SPOTIFY ™️</h1>',unsafe_allow_html=True)
-
 st.title(":musical_note: SPOTIFY")
 st.header("Convert your Spotify Playlist to MP3 Files")
 
