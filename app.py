@@ -11,7 +11,7 @@ from googleapiclient.discovery import build
 import pandas as pd
 import re
 import time
-import json
+import simplejson
 from streamlit_lottie import st_lottie
 from zipfile import ZipFile 
 import shutil
@@ -52,7 +52,7 @@ if link_type=="spotify_playlist" or link_type=="spotify_album":
     #LOADING SPOTIFY ANIMATION
     def load_animations(filepath:str):
         with open(filepath,'r',encoding="utf8") as f:
-            return json.load(f)
+            return simplejson.load(f)
 
     spotify = load_animations("spotify.json")
 
