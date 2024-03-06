@@ -16,6 +16,13 @@ from streamlit_lottie import st_lottie
 from zipfile import ZipFile 
 import shutil
 
+import classify
+import authorization
+import link
+import delete
+import tracks
+import zipp
+
 st.set_page_config(
     page_title="Home",
     page_icon="🎵",
@@ -37,16 +44,11 @@ playlist_link = form.text_input(label="Enter Link",placeholder='Eg: https://open
 submit = form.form_submit_button(label='Submit')
 
 #CHECKING IF LINK ENTERED IS SPOTIFY OR APPLE MUSIC
-def identify_link(link):
-    if "spotify" in link and "playlist" in link:
-        return "spotify_playlist"
-    elif "spotify" in link and "album" in link:
-        return "spotify_album"
-    else:
-        return "This is not a valid link"
+link_type = classify.identify_link(playlist_link)
     
 #LOADING ANIMATIONS BASED ON RESULTS
-if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_link)=="spotify_album":
+if link_type=="spotify_playlist" or link_type=="spotify_album":
+    
     #LOADING SPOTIFY ANIMATION
     def load_animations(filepath:str):
         with open(filepath,'r',encoding="utf8") as f:
@@ -67,61 +69,10 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
         )
     
     #GETTING .ENV VARIABLES
-    CLIENT_ID = os.getenv("CLIENT_ID")
-    CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-    API_KEY=os.getenv("YOUTUBE_API_KEY")
-
-    #GETTING ACCESS TOKEN
-    load_dotenv()
-    client_credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"    
-    encoded_client_creds = base64.b64encode(client_credentials.encode())
-    auth_url = 'https://accounts.spotify.com/api/token'
-    headers={
-        'Authorization':f"Basic {encoded_client_creds.decode()}"
-    }
-    form={
-        'grant_type':'client_credentials'
-    }
-    response = requests.post(auth_url,data=form,headers=headers)
-
-    if response.status_code==200:
-        access_token=response.json()['access_token']
-        print("sucessful")
-    else:
-        access_token=''
-        print("error")
-
-    os.environ['ACCESS_TOKEN'] = access_token
-
-    with open('.env', 'r') as f:
-        lines = f.readlines()
-
-        updated_lines = []
-        found_access_token = False
-        for line in lines:
-            if line.startswith('ACCESS_TOKEN='):
-                updated_lines.append(f'ACCESS_TOKEN="{access_token}"\n')
-                found_access_token = True
-            else:
-                updated_lines.append(line)
-
-        if not found_access_token:
-            updated_lines.append(f'ACCESS_TOKEN="{access_token}"\n')
-
-        with open('.env', 'w') as f:
-            f.writelines(updated_lines)
+    authorization.get_access_token()
 
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-
-
-    #GET URL OF A SONG FROM YOUTUBE
-    def get_video_url(name):
-            youtube=build('youtube','v3',developerKey=API_KEY)
-            request = youtube.search().list(part='snippet',type='video',q=name,maxResults=1)
-            response=request.execute()
-            id = response['items'][0]['id']['videoId']  
-            videoURL=f"https://www.youtube.com/watch?v={id}"  
-            return videoURL
+    API_KEY=os.getenv("YOUTUBE_API_KEY")
 
     #DELETING ZIP FILES CONTENT AFTE RUSAGE
     def delete_files_in_directory(directory_path):
@@ -138,34 +89,21 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
 
 
     #IF USER SELECTS ALBUM TYPE LINK
-    if identify_link(playlist_link)=='spotify_album':
+    if link_type=='spotify_album':
 
         #CLEARING DOWNLOADS FOLDER AND ZIP FILE
         script_directory = os.path.dirname(os.path.abspath(__file__))
         zip_to_delete =  os.path.join(script_directory,"mp3.zip")
         directory_to_delete =  os.path.join(script_directory,"downloads")
 
-        try:
-            os.remove(zip_to_delete)
-        except:
-            print(f"The specified file does not exist.")
-
-        try:
-            shutil.rmtree(directory_to_delete)
-        except:
-            print(f"The specified file does not exist.")
-        
-        #GET ALL ALBUM SONGS NAME FROM URI OF LINK
-        def get_album_tracks(album_id,access_token):
-                session = spotipy.Spotify(auth=access_token)
-                track = session.album_tracks(album_id)['items']
-                return track, session
+        delete.delete_files_in_directory(directory_to_delete)
+        delete.delete_files_in_directory(zip_to_delete)
 
         #IF USER SUBMIT LINKS
         if submit:
             uriAlbum = playlist_link.split("/")[-1].split("?")[0]
             #RUN AND GET NAMES OF SONGS
-            tracksAlbum,session = get_album_tracks(uriAlbum,ACCESS_TOKEN)
+            tracksAlbum,session = tracks.get_album_tracks(uriAlbum,ACCESS_TOKEN)
 
             #INITIALIZE DOWNLOADS FOLDER
             script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -181,7 +119,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                     album_name = track['name']    #GET SONG NAME
                     album_artists = track['artists'][0]['name']   #GET ARTIST NAME
                     keyword=f"{album_name},{album_artists}"  
-                    url = get_video_url(keyword)   #GET YOUTUBE VIDEO LINK
+                    url = link.get_video_url(keyword)   #GET YOUTUBE VIDEO LINK
                     video = YouTube(url)           
                     try:
                         stream = video.streams.filter(only_audio=True).first()   
@@ -215,7 +153,6 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                 zip_album_file=f.read()
 
             #PROVIDE DOWNLOAD BUTTON TO DOWNLOAD ZIP FILE FROM WEB
-                
             col1, col2, col3 = st.columns(3)
             with col2:
                 flag = st.download_button(label='Download Zip', data=zip_album_file, file_name='songs.zip',type="secondary")  # Defaults to 'application/octet-stream'
@@ -223,7 +160,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                     st.write('Thanks for downloading!')
 
     #IF USER SELECTS PLAYLIST TYPE LINK
-    if identify_link(playlist_link)=='spotify_playlist':
+    if link_type=='spotify_playlist':
         #CLEARING DOWNLOADS FOLDER AND ZIP FILE
         script_directory = os.path.dirname(os.path.abspath(__file__))
         zip_to_delete =  os.path.join(script_directory,"mp3.zip")
@@ -248,7 +185,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
         #IF USER SUBMITS LINK
         if submit:
             uri = playlist_link.split("/")[-1].split("?")[0]
-            tracks,session = get_tracks(uri,ACCESS_TOKEN)
+            tracks,session = tracks.get_tracks(uri,ACCESS_TOKEN)
 
             script_directory = os.path.dirname(os.path.abspath(__file__))
             mp3_directory = os.path.join(script_directory,"downloads")
@@ -262,7 +199,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
                     name = track['track']['name']     
                     artists = ', '.join(artist['name'] for artist in track['track']['artists'])  
                     keyword=f"{name},{artists}"  
-                    url = get_video_url(keyword)
+                    url = link.get_video_url(keyword)
                     video = YouTube(url)           
                     try:
                         stream = video.streams.filter(only_audio=True).first()
@@ -287,9 +224,7 @@ if identify_link(playlist_link)=="spotify_playlist" or identify_link(playlist_li
             # st.success("Completed")
             script_directory = os.path.dirname(os.path.abspath(__file__))
             zip_directory = os.path.join(script_directory,"mp3")
-
             shutil.make_archive(zip_directory,'zip',mp3_directory)
-
             with open('mp3.zip', 'rb') as f:
                 zip_file=f.read()
 
