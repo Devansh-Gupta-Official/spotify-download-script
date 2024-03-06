@@ -17,37 +17,7 @@ def get_tracks(playlist_id,access_token):
     #get list of tracks in a given playlist
     track = session.playlist_tracks(playlist_id)['items']
     return track, session
+
+
 tracks,session = get_tracks(uri,ACCESS_TOKEN)
-#INITIALIZE A CSV FILE IN WHICH YOU COPY ALL INFO REGARDING A TRACK
-with open("track.csv", "w", newline='') as file:     #changing encoding to newline to avoid blank rows in csv
-    writer = csv.writer(file)
-    writer.writerow(["Name","Artist","Album Name","Album Release Date"])
-    for track in tracks:
-        name = track['track']['name']     #TRACK NAME
-        # #Main Artist
-        # artist_uri = track["track"]["artists"][0]["uri"]
-        # artist_info = sp.artist(artist_uri)
-        # #Name, popularity, genre
-        # artist_name = track["track"]["artists"][0]["name"]
-        # artist_pop = artist_info["popularity"]
-        # artist_genres = artist_info["genres"]
-        artists = ','.join(artist['name'] for artist in track['track']['artists'])   #ARTISTS NAME
-        album_name = track['track']['album']['name']    #ALBUM NAME
-        track_popularity = track["track"]["popularity"]      #TRACK POPULARITY
-        album_id = track['track']['album']['id']    #ALBUM ID
-        track_id = track['track']['id']     #TRACK ID
-        #extracting other features (not of use)
-        features=session.audio_features(track_id)[0]
-        album_release_date = session.album(album_id)['release_date']     #ALBUM RELEASE DATE
-        # danceability = features['danceability']
-        # energy = features['energy']
-        # key = features['key']
-        # loudness = features['loudness']
-        # mode=features['mode']
-        # speechiness = features['speechiness']
-        # acousticness = features['acousticness']
-        # intstrumentalness = features['intstrumentalness']
-        # liveness = features['liveness']
-        # valence = features['valence']
-        # tempo = features['tempo']
-        writer.writerow([name,artists,album_name,album_release_date])
+
