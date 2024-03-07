@@ -21,18 +21,49 @@ import authorization
 import link
 import delete
 import tracks
-import zipp
 
 st.set_page_config(
     page_title="Home",
     page_icon="🎵",
 )
-# st.markdown(""" <style> .font {
-# font-size:50px ; font-family: 'Sans-serif'; color: #F2F2F2;} 
-# </style> """, unsafe_allow_html=True)
-# st.markdown('<h1 class="font">🎵 SPOTIFY ™️</h1>',unsafe_allow_html=True)
-st.title(":musical_note: SPOTIFY")
-st.header("Convert your Spotify Playlist to MP3 Files")
+
+import base64
+import streamlit as st
+
+
+#SET Background image to your app
+# def set_bg_hack_url():
+#     '''   
+#     A function to unpack an image from url and set as bg.
+#     Returns
+#     -------
+#     The background.
+#     '''
+#     st.markdown(
+#          f"""
+#          <style>
+#          .stApp {{
+#              background: url("https://cdn.pixabay.com/photo/2020/06/19/22/33/wormhole-5319067_960_720.jpg");
+#              background-size: cover
+#          }}
+#          </style>
+#          """,
+#          unsafe_allow_html=True
+#      )
+    
+# set_bg_hack_url()
+
+col1,col2=st.columns([1,6])
+with col1:
+    st.write("")
+    st.image("icon.jpg")
+with col2:
+    st.markdown("<h1 style = 'margin-bottom:-5%; color: #F2F2F2F;'>SPOTIFY<span style= 'color: #F2F2F2F;'> Downloader</span></h1>", unsafe_allow_html=True)
+
+st.write("")
+st.markdown("<h3 style = 'margin-bottom:-35%; font-style: italic; color: #F2F2F2;'>Convert your Spotify Playlist to MP3 Files</h1>", unsafe_allow_html=True)
+# st.title(":musical_note: SPOTIFY")
+# st.header("Convert your Spotify Playlist to MP3 Files")
 
 st.write("")
 st.write("")
@@ -46,6 +77,8 @@ submit = form.form_submit_button(label='Submit')
 #CHECKING IF LINK ENTERED IS SPOTIFY OR APPLE MUSIC
 link_type = classify.identify_link(playlist_link)
     
+st.sidebar.markdown("<h1 style='font-style: italic; color: #F2F2F2;'>Welcome to <span style='font-style: italic; color: #F2F2F2;'>Spotify Downloader!</span></h1>", unsafe_allow_html=True)
+
 #LOADING ANIMATIONS BASED ON RESULTS
 if link_type=="spotify_playlist" or link_type=="spotify_album":
     
