@@ -15,6 +15,7 @@ import simplejson
 from streamlit_lottie import st_lottie
 from zipfile import ZipFile 
 import shutil
+from streamlit_feedback import streamlit_feedback  #from trubrics
 
 
 st.set_page_config(
@@ -50,10 +51,9 @@ st.set_page_config(
 
 col1,col2=st.columns([1,6])
 with col1:
-    st.write("")
     st.image("icon.jpg")
 with col2:
-    st.markdown("<h1 style = 'margin-bottom:-5%; color: #F2F2F2F;'>SPOTIFY<span style= 'color: #F2F2F2F;'> Downloader</span></h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style = 'margin-bottom:-5%; color: #F2F2F2F;'>SPOTIFY<span style= 'color: #F2F2F2F; font-style: italic;'> MPZ</span></h1>", unsafe_allow_html=True)
 
 st.write("")
 st.markdown("<h3 style = 'margin-bottom:-35%; font-style: italic; color: #F2F2F2;'>Convert your Spotify Playlist to MP3 Files</h1>", unsafe_allow_html=True)
@@ -317,3 +317,24 @@ st.sidebar.write(
 )
 st.sidebar.write("- Ensure you have a good internet connection for smooth processing.")
 st.sidebar.write("- For any issues or feedback, contact the developer.")
+
+#ADDING FEEDBACK
+feedback = streamlit_feedback(
+    feedback_type="faces",
+    # optional_text_label="Please provide an explanation",
+    align="center"
+)
+
+if feedback == None:
+    pass
+elif feedback['score']=='😞':
+    st.text_input("Feedback",placeholder='Enter your Feedback')
+elif feedback['score']=='🙁':
+    st.text_input("Feedback",placeholder='Enter your Feedback')
+elif feedback['score']=='😐':
+    st.text_input("Feedback",placeholder='Enter your Feedback')
+elif feedback['score']=='🙂':
+    st.write("Thank you for your feedback!")
+elif feedback['score']=='😀':
+    st.write("Thank you for your feedback!")
+    st.balloons()
