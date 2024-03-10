@@ -27,27 +27,27 @@ st.set_page_config(
 # </style> """, unsafe_allow_html=True)
 # st.markdown('<h1 class="font">🎵 SPOTIFY ™️</h1>',unsafe_allow_html=True)
 
-#SET Background image to your app
-# def set_bg_hack_url():
-#     '''   
-#     A function to unpack an image from url and set as bg.
-#     Returns
-#     -------
-#     The background.
-#     '''
-#     st.markdown(
-#          f"""
-#          <style>
-#          .stApp {{
-#              background: url("https://cdn.pixabay.com/photo/2020/06/19/22/33/wormhole-5319067_960_720.jpg");
-#              background-size: cover
-#          }}
-#          </style>
-#          """,
-#          unsafe_allow_html=True
-#      )
+# SET Background image to your app
+def set_bg_hack_url():
+    '''   
+    A function to unpack an image from url and set as bg.
+    Returns
+    -------
+    The background.
+    '''
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background: url("https://wallpaperaccess.com/full/1373267.jpg");
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+     )
     
-# set_bg_hack_url()
+set_bg_hack_url()
 
 col1,col2=st.columns([1,6])
 with col1:
