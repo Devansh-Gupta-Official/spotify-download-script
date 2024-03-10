@@ -319,22 +319,29 @@ st.sidebar.write("- Ensure you have a good internet connection for smooth proces
 st.sidebar.write("- For any issues or feedback, contact the developer.")
 
 #ADDING FEEDBACK
-feedback = streamlit_feedback(
-    feedback_type="faces",
-    # optional_text_label="Please provide an explanation",
-    align="center"
-)
+with st.sidebar:
+    st.write("")
+    st.write("")
+    st.subheader("Feedback")
+    feedback = streamlit_feedback(
+        feedback_type="faces",
+        # optional_text_label="Please provide an explanation",
+        align="center"
+    )
 
-if feedback == None:
-    pass
-elif feedback['score']=='😞':
-    st.text_input("Feedback",placeholder='Enter your Feedback')
-elif feedback['score']=='🙁':
-    st.text_input("Feedback",placeholder='Enter your Feedback')
-elif feedback['score']=='😐':
-    st.text_input("Feedback",placeholder='Enter your Feedback')
-elif feedback['score']=='🙂':
-    st.write("Thank you for your feedback!")
-elif feedback['score']=='😀':
-    st.write("Thank you for your feedback!")
-    st.balloons()
+    if feedback == None:
+        pass
+    elif feedback['score']=='😞':
+        st.write("We value your feedback! Please let us know how we can improve.")
+        st.text_input("Feedback",placeholder='Type here...')
+    elif feedback['score']=='🙁':
+        st.write("We value your feedback! Please let us know how we can improve.")
+        st.text_input("Feedback",placeholder='Type here...')
+    elif feedback['score']=='😐':
+        st.write("We value your feedback! Please let us know how we can improve.")
+        st.text_input("Feedback",placeholder='Type here...')
+    elif feedback['score']=='🙂':
+        st.write("Thank you for your feedback!")
+    elif feedback['score']=='😀':
+        st.write("Thank you for your feedback!")
+        st.balloons()
