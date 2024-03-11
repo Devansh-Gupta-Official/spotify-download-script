@@ -345,3 +345,5 @@ with st.sidebar:
     elif feedback['score']=='😀':
         st.write("Thank you for your feedback!")
         st.balloons()
+
+

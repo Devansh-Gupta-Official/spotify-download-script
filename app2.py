@@ -15,6 +15,7 @@ import simplejson
 from streamlit_lottie import st_lottie
 from zipfile import ZipFile 
 import shutil
+from streamlit_feedback import streamlit_feedback  #from trubrics
 
 import classify
 import authorization
@@ -32,33 +33,32 @@ import streamlit as st
 
 
 #SET Background image to your app
-# def set_bg_hack_url():
-#     '''   
-#     A function to unpack an image from url and set as bg.
-#     Returns
-#     -------
-#     The background.
-#     '''
-#     st.markdown(
-#          f"""
-#          <style>
-#          .stApp {{
-#              background: url("https://cdn.pixabay.com/photo/2020/06/19/22/33/wormhole-5319067_960_720.jpg");
-#              background-size: cover
-#          }}
-#          </style>
-#          """,
-#          unsafe_allow_html=True
-#      )
+def set_bg_hack_url():
+    '''   
+    A function to unpack an image from url and set as bg.
+    Returns
+    -------
+    The background.
+    '''
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background: url("https://wallpaperaccess.com/full/1373267.jpg");
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+     )
     
-# set_bg_hack_url()
+set_bg_hack_url()
 
 col1,col2=st.columns([1,6])
 with col1:
-    st.write("")
     st.image("icon.jpg")
 with col2:
-    st.markdown("<h1 style = 'margin-bottom:-5%; color: #F2F2F2F;'>SPOTIFY<span style= 'color: #F2F2F2F;'> Downloader</span></h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style = 'margin-bottom:-5%; color: #F2F2F2F;'>SPOTIFY<span style= 'color: #F2F2F2F; font-style: italic;'> MPZ</span></h1>", unsafe_allow_html=True)
 
 st.write("")
 st.markdown("<h3 style = 'margin-bottom:-35%; font-style: italic; color: #F2F2F2;'>Convert your Spotify Playlist to MP3 Files</h1>", unsafe_allow_html=True)
@@ -279,5 +279,33 @@ st.sidebar.write(
 st.sidebar.write("- Ensure you have a good internet connection for smooth processing.")
 st.sidebar.write("- For any issues or feedback, contact the developer.")
 
+
+#ADDING FEEDBACK
+with st.sidebar:
+    st.write("")
+    st.write("")
+    st.subheader("Feedback")
+    feedback = streamlit_feedback(
+        feedback_type="faces",
+        # optional_text_label="Please provide an explanation",
+        align="center"
+    )
+
+    if feedback == None:
+        pass
+    elif feedback['score']=='😞':
+        st.write("We value your feedback! Please let us know how we can improve.")
+        st.text_input("Feedback",placeholder='Type here...')
+    elif feedback['score']=='🙁':
+        st.write("We value your feedback! Please let us know how we can improve.")
+        st.text_input("Feedback",placeholder='Type here...')
+    elif feedback['score']=='😐':
+        st.write("We value your feedback! Please let us know how we can improve.")
+        st.text_input("Feedback",placeholder='Type here...')
+    elif feedback['score']=='🙂':
+        st.write("Thank you for your feedback!")
+    elif feedback['score']=='😀':
+        st.write("Thank you for your feedback!")
+        st.balloons()
 
 
