@@ -68,3 +68,9 @@ Contributions are what make the open-source community such an amazing place to l
 - Push to the branch (git push origin feature/AmazingFeature).
 - Open a pull request.
 
+## Acknowledgements
+- Streamlit
+- Pytube
+- Spotipy
+- Google API Client
+- Streamlit-feedback
